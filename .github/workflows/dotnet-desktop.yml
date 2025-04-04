@@ -1,0 +1,84 @@
+name: .NET Core Desktop
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: write
+  
+jobs:
+  build:
+    strategy:
+      matrix:
+        configuration: [ Stand, Bacon ]
+
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: LicenseCheck.sln
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: set stand code
+      if: matrix.configuration == 'Stand'
+      run: |
+        sed -i 's#GetExpiryDate();#GetExpiryDateByReq();#g' LicenseCheck/MainWindow.xaml.cs
+        sed -i 's#RSA_HOLDER#${{ secrets.RSA_PUB }}#g' LicenseCheck/MainWindow.xaml.cs
+
+    # Install the .NET Core workload
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+
+    # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    # Restore the application to populate the obj folder with RuntimeIdentifiers
+    - name: Restore the application
+      run: |
+        msbuild $env:Solution_Name /t:Restore /p:Configuration=Release
+
+    # Build the application
+    - name: Build the application
+      run: |
+        msbuild /p:Configuration=Release
+
+    - name: .net Reactor
+      uses: ztzzxyz/dotnet-reactor-run-action@main
+      with:
+        project_file: '.reactor/Hearthbuddy.nrproj'
+        input_path: 'LicenseCheck/bin/Release/net472/LicenseCheck.exe'
+        output_path: 'LicenseCheck/bin/Release/net472/LicenseCheck_Secure/License${{ matrix.configuration }}Check.exe'
+        additional_arguments: '-run_without_licensefile 1'
+      env:
+        REACTOR_MKEY: ${{ secrets.REACTOR_MKEY }}
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: License${{ matrix.configuration }}Check
+        path: LicenseCheck/bin/Release/net472/LicenseCheck_Secure/License${{ matrix.configuration }}Check.exe
+  release:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Download artifact
+      uses: actions/download-artifact@v4.2.1
+    - name: Upload to Release
+      uses: ncipollo/release-action@main
+      with:
+        tag: v1.0.0
+        artifacts: "**/*.exe"
+        allowUpdates: true
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@main
+      with:
+        retain_days: 0
+        keep_minimum_runs: 1
