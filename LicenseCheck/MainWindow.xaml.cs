@@ -72,7 +72,7 @@ namespace LicenseCheck
                 var hardwareId = Status.GetHardwareID(true, true, false, true);
                 WebClient wc = new WebClient();
                 using (StreamReader reader = new StreamReader(wc.OpenRead(
-                                                                  "https://gitee.com/hearthstone-hearthbuddy/Hearthbuddy-account/raw/main/accounts/" +
+                                                                  "https://cdn.jsdelivr.net/gh/Hearthbuddy/Hearthbuddy-account@main/accounts/" +
                                                                   hardwareId) ??
                                                               throw new InvalidOperationException()))
                 {
