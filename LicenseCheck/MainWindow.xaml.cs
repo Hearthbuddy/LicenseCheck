@@ -72,7 +72,7 @@ namespace LicenseCheck
                 var hardwareId = Status.GetHardwareID(true, true, false, true);
                 WebClient wc = new WebClient();
                 using (StreamReader reader = new StreamReader(wc.OpenRead(
-                                                                  "https://cdn.jsdelivr.net/gh/Hearthbuddy/Hearthbuddy-account@main/accounts/" +
+                                                                  "https://gcore.jsdelivr.net/gh/Hearthbuddy/Hearthbuddy-account@main/accounts/" +
                                                                   hardwareId) ??
                                                               throw new InvalidOperationException()))
                 {
