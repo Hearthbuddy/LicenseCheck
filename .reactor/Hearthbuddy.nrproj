@@ -91,7 +91,7 @@
     <Inbuilt_Lock_Evaluation_Period_Type>Trial_Days</Inbuilt_Lock_Evaluation_Period_Type>
     <Inbuilt_Lock_Evaluation_Period_Time>14</Inbuilt_Lock_Evaluation_Period_Time>
     <Inbuilt_Lock_Expiry_Date_Enabled>true</Inbuilt_Lock_Expiry_Date_Enabled>
-    <Inbuilt_Lock_Expiry_Date>20250823</Inbuilt_Lock_Expiry_Date>
+    <Inbuilt_Lock_Expiry_Date>20260101</Inbuilt_Lock_Expiry_Date>
     <Inbuilt_Lock_Number_Of_Uses_Enabled>false</Inbuilt_Lock_Number_Of_Uses_Enabled>
     <Inbuilt_Lock_Number_Of_Uses>10</Inbuilt_Lock_Number_Of_Uses>
     <Inbuilt_Lock_Max_Number_Of_Instances_Enabled>false</Inbuilt_Lock_Max_Number_Of_Instances_Enabled>
